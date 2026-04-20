@@ -730,18 +730,20 @@
     .feature-card {
       position: relative;
       padding: 2.5rem;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 20px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
       overflow: hidden;
-      transition: all 0.4s ease;
+      transition: all 0.4s var(--transition-smooth);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
     }
 
     .feature-card::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(167, 139, 250, 0.1), transparent 50%);
+      background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(167, 139, 250, 0.08), transparent 50%);
       opacity: 0;
       transition: opacity 0.4s;
       pointer-events: none;
@@ -752,9 +754,12 @@
     }
 
     .feature-card:hover {
-      transform: translateY(-8px);
-      border-color: rgba(167, 139, 250, 0.25);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 40px rgba(167, 139, 250, 0.08);
+      transform: translateY(-4px);
+      border-color: var(--border-hover);
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(167, 139, 250, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
     .feature-glow {
@@ -895,16 +900,18 @@
     .stat-card {
       text-align: center;
       padding: 2rem 1.5rem;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 16px;
-      transition: all 0.3s ease;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      transition: all 0.3s var(--transition-smooth);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
     }
 
     .stat-card:hover {
       transform: translateY(-4px);
-      border-color: rgba(167, 139, 250, 0.2);
-      background: rgba(255, 255, 255, 0.03);
+      border-color: var(--border-hover);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
 
     .stat-number {
