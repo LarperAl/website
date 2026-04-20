@@ -6,14 +6,16 @@
     <title>larper.ai | About</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
       :root {
         --bg: #0c0c14;
-        --bg-light: #12121c;
-        --text: #ffffff;
-        --text-secondary: #b4b4c7;
-        --muted: #8888a0;
+        --bg-elevated: #12121c;
+        --bg-card: rgba(255, 255, 255, 0.02);
+        --bg-card-hover: rgba(255, 255, 255, 0.04);
+        --text: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
         --accent: #a78bfa;
         --accent-alt: #60a5fa;
         --accent-pink: #f472b6;
@@ -21,6 +23,17 @@
         --accent-green: #34d399;
         --accent-orange: #fb923c;
         --accent-yellow: #fbbf24;
+        --border: rgba(255, 255, 255, 0.06);
+        --border-hover: rgba(167, 139, 250, 0.25);
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --glass-blur: 16px;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 20px;
+        --radius-2xl: 24px;
+        --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       * {
@@ -43,7 +56,8 @@
       body {
         background: var(--bg);
         color: var(--text);
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
         line-height: 1.6;
         overflow-x: hidden;
       }
@@ -79,7 +93,7 @@
         position: absolute;
         inset: 0;
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        opacity: 0.02;
+        opacity: 0.035;
       }
 
       /* ===== SCROLL PROGRESS ===== */
@@ -390,13 +404,15 @@
       }
 
       .founder-card {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 20px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-xl);
         padding: 2rem;
         position: relative;
         overflow: hidden;
-        transition: all 0.4s ease;
+        transition: all 0.4s var(--transition-smooth);
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
       }
 
       .founder-card::before {
@@ -414,8 +430,9 @@
       }
 
       .founder-card:hover {
-        transform: translateY(-6px);
-        border-color: rgba(167, 139, 250, 0.2);
+        transform: translateY(-4px);
+        border-color: var(--border-hover);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
       }
 
       .founder-glow {
@@ -527,19 +544,22 @@
       }
 
       .value-card {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 16px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
         padding: 2rem;
         text-align: center;
-        transition: all 0.3s ease;
+        transition: all 0.3s var(--transition-smooth);
         position: relative;
         overflow: hidden;
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
       }
 
       .value-card:hover {
         transform: translateY(-4px);
-        border-color: rgba(167, 139, 250, 0.2);
+        border-color: var(--border-hover);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
       }
 
       .value-icon {
@@ -699,8 +719,8 @@
       /* ===== REVEAL ===== */
       .reveal {
         opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
+        transform: translateY(24px);
+        transition: opacity 0.7s var(--transition-smooth), transform 0.7s var(--transition-smooth);
       }
 
       .reveal.active {
@@ -708,14 +728,91 @@
         transform: translateY(0);
       }
 
-      .reveal-delay-1 { transition-delay: 0.1s; }
-      .reveal-delay-2 { transition-delay: 0.2s; }
-      .reveal-delay-3 { transition-delay: 0.3s; }
+      .reveal-delay-1 { transition-delay: 0.08s; }
+      .reveal-delay-2 { transition-delay: 0.16s; }
+      .reveal-delay-3 { transition-delay: 0.24s; }
+
+      /* ===== MOBILE NAV ===== */
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        z-index: 1002;
+      }
+
+      .hamburger span {
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: var(--text);
+        border-radius: 2px;
+        transition: all 0.3s ease;
+      }
+
+      .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      .hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+
+      .mobile-nav-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 999;
+        background: rgba(12, 12, 20, 0.95);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s ease;
+      }
+
+      .mobile-nav-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      .mobile-nav-links a {
+        color: var(--text);
+        text-decoration: none;
+        font-size: 1.5rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        transition: color 0.2s ease;
+      }
+
+      .mobile-nav-links a:hover {
+        color: var(--accent);
+      }
 
       /* ===== RESPONSIVE ===== */
       @media (max-width: 768px) {
         .nav-links {
           display: none;
+        }
+
+        .hamburger {
+          display: flex;
         }
 
         .page-hero {
@@ -785,6 +882,11 @@
           <a href="index.html"><span>Home</span></a>
           <a href="about.html" aria-current="page"><span>About</span></a>
         </nav>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </header>
 
@@ -1022,11 +1124,32 @@
             card.style.setProperty('--mouse-y', y + '%');
           });
         });
+
+        // ===== MOBILE NAV =====
+        const hamburger = document.getElementById('hamburger');
+        const mobileNav = document.getElementById('mobile-nav');
+
+        hamburger.addEventListener('click', () => {
+          hamburger.classList.toggle('active');
+          mobileNav.classList.toggle('active');
+          document.body.classList.toggle('modal-open');
+        });
+
+        mobileNav.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            mobileNav.classList.remove('active');
+            document.body.classList.remove('modal-open');
+          });
+        });
       });
     </script>
 
-        revealElements.forEach(el => revealObserver.observe(el));
-      });
-    </script>
+    <div class="mobile-nav-overlay" id="mobile-nav">
+      <div class="mobile-nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+      </div>
+    </div>
   </body>
 </html>
