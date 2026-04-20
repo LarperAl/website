@@ -114,14 +114,14 @@
       position: fixed;
       top: 0;
       left: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-cyan), var(--accent-pink), var(--accent));
-      background-size: 200% 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-cyan), var(--accent-green), var(--accent));
+      background-size: 300% 100%;
       z-index: 10001;
       transform-origin: left;
       transform: scaleX(0);
-      animation: gradientShift 3s linear infinite;
-      box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent-cyan);
+      animation: gradientShift 8s linear infinite;
+      box-shadow: 0 0 12px var(--accent), 0 0 24px rgba(167, 139, 250, 0.3);
     }
 
     @keyframes gradientShift {
@@ -130,7 +130,7 @@
       }
 
       100% {
-        background-position: 200% 50%;
+        background-position: 300% 50%;
       }
     }
 
