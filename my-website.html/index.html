@@ -669,6 +669,163 @@
       }
     }
 
+    /* ===== TRUSTED BY ===== */
+    .trusted-section {
+      padding: 4rem 0 2rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .trusted-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .trusted-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4rem;
+      flex-wrap: wrap;
+    }
+
+    .trusted-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      opacity: 0.4;
+      transition: opacity 0.4s ease;
+      text-transform: uppercase;
+    }
+
+    .trusted-logo:hover {
+      opacity: 0.7;
+    }
+
+    .trusted-divider {
+      width: 1px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* ===== CASE STUDY ===== */
+    .case-study-section {
+      padding: 4rem 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    .case-study-card {
+      position: relative;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-2xl);
+      padding: 3.5rem 3rem;
+      overflow: hidden;
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+    }
+
+    .case-study-card::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(167, 139, 250, 0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .case-study-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40px;
+      left: -40px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.06), transparent 70%);
+      pointer-events: none;
+    }
+
+    .case-study-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding: 0.5rem 1.2rem;
+      background: rgba(167, 139, 250, 0.08);
+      border: 1px solid rgba(167, 139, 250, 0.2);
+      border-radius: var(--radius-sm);
+      margin-bottom: 1.5rem;
+    }
+
+    .case-study-card h3 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+      position: relative;
+    }
+
+    .case-study-client {
+      font-size: 0.95rem;
+      color: var(--accent-cyan);
+      margin-bottom: 1.25rem;
+      position: relative;
+    }
+
+    .case-study-desc {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.8;
+      max-width: 680px;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .case-study-metrics {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .case-study-metric {
+      text-align: left;
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value.purple { color: var(--accent); }
+    .metric-value.cyan { color: var(--accent-cyan); }
+    .metric-value.green { color: var(--accent-green); }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
     /* ===== SECTIONS ===== */
     section {
       padding: 6rem 0;
@@ -1300,6 +1457,79 @@
       overflow: hidden;
     }
 
+    /* ===== MOBILE NAV ===== */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 1002;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .mobile-nav-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(12, 12, 20, 0.95);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .mobile-nav-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-nav-links {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .mobile-nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      transition: color 0.2s ease;
+    }
+
+    .mobile-nav-links a:hover {
+      color: var(--accent);
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 1024px) {
       .steps-container {
@@ -1318,6 +1548,10 @@
     @media (max-width: 768px) {
       .nav-links {
         display: none;
+      }
+
+      .hamburger {
+        display: flex;
       }
 
       .hero {
@@ -1369,6 +1603,33 @@
       body {
         cursor: auto;
       }
+
+      .case-study-card {
+        padding: 2.5rem 1.5rem;
+      }
+
+      .case-study-metrics {
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 1rem;
+      }
+
+      .feature-card {
+        padding: 2rem 1.5rem;
+      }
+
+      .trusted-logos {
+        gap: 2rem;
+      }
+
+      .case-study-metrics {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
     }
   </style>
 </head>
@@ -1395,6 +1656,11 @@
         <a href="index.html" aria-current="page"><span>Home</span></a>
         <a href="about.html"><span>About</span></a>
       </nav>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </header>
 
@@ -1457,6 +1723,22 @@
       <span class="marquee-item">Scalable Solutions</span>
     </div>
   </section>
+  <hr class="section-divider">
+
+  <!-- Trusted By -->
+  <section class="trusted-section">
+    <div class="container">
+      <div class="reveal">
+        <p class="trusted-label">Trusted By</p>
+        <div class="trusted-logos">
+          <span class="trusted-logo">NewFI</span>
+          <div class="trusted-divider"></div>
+          <span class="trusted-logo">Apollo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <hr class="section-divider">
 
   <!-- What We Do -->
@@ -1535,6 +1817,39 @@
       </div>
     </div>
   </section>
+
+  <!-- Case Study -->
+  <section class="case-study-section">
+    <div class="container">
+      <div class="case-study-card reveal">
+        <div class="case-study-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Case Study
+        </div>
+        <h3>Streamlining Non-QM Guideline Comparison</h3>
+        <p class="case-study-client">NewFI Lending — backed by Apollo Hedge Fund</p>
+        <p class="case-study-desc">Replaced manual lender guideline reviews with an AI-powered comparator that identifies matches, conflicts, and overlays across complex mortgage documents — turning hours of underwriter work into minutes.</p>
+        <div class="case-study-metrics">
+          <div class="case-study-metric">
+            <div class="metric-value purple">10x</div>
+            <div class="metric-label">Faster Reviews</div>
+          </div>
+          <div class="case-study-metric">
+            <div class="metric-value cyan">v2.3</div>
+            <div class="metric-label">Live in Production</div>
+          </div>
+          <div class="case-study-metric">
+            <div class="metric-value green">100%</div>
+            <div class="metric-label">Match Accuracy</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <hr class="section-divider">
 
   <!-- How It Works -->
@@ -1853,8 +2168,33 @@
           emailError.classList.remove('visible');
         }
       });
+
+      // ===== MOBILE NAV =====
+      const hamburger = document.getElementById('hamburger');
+      const mobileNav = document.getElementById('mobile-nav');
+
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        mobileNav.classList.toggle('active');
+        document.body.classList.toggle('modal-open');
+      });
+
+      mobileNav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          mobileNav.classList.remove('active');
+          document.body.classList.remove('modal-open');
+        });
+      });
     });
   </script>
+
+  <div class="mobile-nav-overlay" id="mobile-nav">
+    <div class="mobile-nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+    </div>
+  </div>
 </body>
 
 </html>
