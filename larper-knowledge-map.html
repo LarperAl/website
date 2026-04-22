@@ -2,123 +2,517 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Larper.ai — Knowledge Map</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>larper.ai | Knowledge Map</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #0c0c14;
+      --bg-elevated: #12121c;
+      --bg-card: rgba(255, 255, 255, 0.02);
+      --bg-card-hover: rgba(255, 255, 255, 0.04);
+      --text: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #a78bfa;
+      --accent-alt: #60a5fa;
+      --accent-pink: #f472b6;
+      --accent-cyan: #22d3ee;
+      --accent-green: #34d399;
+      --accent-orange: #fb923c;
+      --accent-yellow: #fbbf24;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(167, 139, 250, 0.25);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-blur: 16px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-2xl: 24px;
+      --section-padding: 120px;
+      --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0e0f12;
-      color: #e2e4e9;
-      min-height: 100vh;
-      padding: 40px 32px;
+    html {
+      scroll-behavior: smooth;
     }
 
-    /* ── Header ── */
-    .header {
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--accent), var(--accent-cyan));
+      border-radius: 5px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ===== ANIMATED BACKGROUND ===== */
+    .bg-container {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .mesh-gradient {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 15% 35%, rgba(167, 139, 250, 0.07) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 40% at 75% 20%, rgba(96, 165, 250, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 50% at 55% 75%, rgba(244, 114, 182, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 30% at 90% 60%, rgba(34, 211, 238, 0.03) 0%, transparent 50%);
+    }
+
+    .grid-pattern {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100px 100px;
+      mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+    }
+
+    .noise {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+    }
+
+    /* ===== CORNER FRAMES ===== */
+    .corner-frame {
+      position: fixed;
+      width: 60px;
+      height: 60px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .corner-tl { top: 16px; left: 16px; }
+    .corner-tr { top: 16px; right: 16px; }
+    .corner-bl { bottom: 16px; left: 16px; }
+    .corner-br { bottom: 16px; right: 16px; }
+
+    .corner-frame line {
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+      animation: drawCorner 1.5s ease-out forwards;
+    }
+    .corner-tr line { animation-delay: 0.15s; }
+    .corner-bl line { animation-delay: 0.3s; }
+    .corner-br line { animation-delay: 0.45s; }
+
+    @keyframes drawCorner {
+      to { stroke-dashoffset: 0; }
+    }
+
+    .corner-line {
+      position: fixed;
+      left: 76px;
+      right: 76px;
+      height: 0.5px;
+      background: linear-gradient(90deg, transparent, rgba(167,139,250,0.15), rgba(34,211,238,0.15), transparent);
+      z-index: 2;
+      pointer-events: none;
+      transform: scaleX(0);
+      animation: extendLine 1s ease-out 0.8s forwards;
+    }
+    .corner-line-top { top: 16px; }
+    .corner-line-bottom { bottom: 16px; }
+
+    @keyframes extendLine {
+      to { transform: scaleX(1); }
+    }
+
+    @media (max-width: 768px) {
+      .corner-frame {
+        width: 40px;
+        height: 40px;
+      }
+      .corner-frame line { stroke-width: 0.5; stroke-dasharray: 40; stroke-dashoffset: 40; }
+      .corner-tl { top: 10px; left: 10px; }
+      .corner-tr { top: 10px; right: 10px; }
+      .corner-bl { bottom: 10px; left: 10px; }
+      .corner-br { bottom: 10px; right: 10px; }
+      .corner-line { display: none; }
+      .corner-line-top, .corner-line-bottom { display: none; }
+    }
+
+    /* Scroll Progress */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-cyan), var(--accent-green), var(--accent));
+      background-size: 300% 100%;
+      z-index: 10001;
+      transform-origin: left;
+      transform: scaleX(0);
+      animation: gradientShift 8s linear infinite;
+      box-shadow: 0 0 12px var(--accent), 0 0 24px rgba(167, 139, 250, 0.3);
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+
+    /* ===== HEADER ===== */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1.5rem 0;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .site-header.scrolled {
+      padding: 1rem 0;
+      background: rgba(12, 12, 20, 0.85);
+      backdrop-filter: blur(30px) saturate(180%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      position: relative;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-cyan));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #000;
+      box-shadow: 0 0 30px rgba(167, 139, 250, 0.4);
+      animation: iconGlow 3s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-icon::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-cyan), var(--accent-pink), var(--accent));
+      border-radius: 12px;
+      z-index: -1;
+      animation: borderRotate 3s linear infinite;
+    }
+
+    @keyframes borderRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes iconGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(167, 139, 250, 0.4), 0 0 40px rgba(167, 139, 250, 0.2); }
+      50% { box-shadow: 0 0 40px rgba(96, 165, 250, 0.6), 0 0 80px rgba(96, 165, 250, 0.3); }
+    }
+
+    .brand-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, var(--text), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      padding: 0.5rem;
+      border-radius: 100px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.65rem 1.4rem;
+      border-radius: 100px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-links a::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent-cyan));
+      border-radius: 100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .nav-links a span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #000;
+    }
+
+    .nav-links a:hover::before,
+    .nav-links a.active::before {
+      opacity: 1;
+    }
+
+    /* ===== MOBILE NAV ===== */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 1002;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .mobile-nav-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(12, 12, 20, 0.95);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .mobile-nav-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-nav-links {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .mobile-nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      transition: color 0.2s ease;
+    }
+
+    .mobile-nav-links a:hover,
+    .mobile-nav-links a.active {
+      color: var(--accent);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      padding-top: 120px;
+      padding-bottom: 4rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Page Header */
+    .page-header {
+      margin-bottom: 3rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .page-header-content {
       display: flex;
       align-items: baseline;
       gap: 16px;
-      margin-bottom: 40px;
-      border-bottom: 1px solid #23252d;
-      padding-bottom: 24px;
+      flex-wrap: wrap;
     }
 
-    .header h1 {
-      font-size: 22px;
+    .page-header h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.75rem;
       font-weight: 700;
-      letter-spacing: -0.3px;
+      color: var(--text);
+      letter-spacing: -0.02em;
     }
 
-    .header .sub {
-      font-size: 13px;
-      color: #5e6373;
+    .page-header .sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .badge {
       margin-left: auto;
-      font-size: 11px;
-      background: #1a3a2a;
-      color: #3ecf8e;
-      border: 1px solid #2a5a3a;
-      padding: 3px 10px;
+      font-size: 0.7rem;
+      background: rgba(52, 211, 153, 0.1);
+      color: var(--accent-green);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      padding: 4px 12px;
       border-radius: 20px;
       font-weight: 600;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
 
-    /* ── Grid ── */
+    @media (max-width: 768px) {
+      .badge {
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+      .page-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+
+    /* ===== GRID ===== */
     .grid {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
       gap: 16px;
     }
 
-    /* ── Cards ── */
+    /* ===== CARDS ===== */
     .card {
-      background: #16181f;
-      border: 1px solid #23252d;
-      border-radius: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
       padding: 20px;
+      backdrop-filter: blur(20px);
+      transition: all 0.4s var(--transition-smooth);
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-card-hover);
     }
 
     .card-title {
-      font-size: 11px;
-      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #5e6373;
+      letter-spacing: 0.1em;
+      color: var(--accent);
       margin-bottom: 14px;
     }
 
-    /* ── Spans ── */
-    .span-4 {
-      grid-column: span 4;
-    }
+    /* Spans */
+    .span-4 { grid-column: span 4; }
+    .span-3 { grid-column: span 3; }
+    .span-5 { grid-column: span 5; }
+    .span-7 { grid-column: span 7; }
+    .span-6 { grid-column: span 6; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
 
-    .span-3 {
-      grid-column: span 3;
-    }
-
-    .span-5 {
-      grid-column: span 5;
-    }
-
-    .span-7 {
-      grid-column: span 7;
-    }
-
-    .span-6 {
-      grid-column: span 6;
-    }
-
-    .span-8 {
-      grid-column: span 8;
-    }
-
-    .span-12 {
-      grid-column: span 12;
-    }
-
-    /* ── Company card ── */
+    /* Company card */
     .company-name {
-      font-size: 28px;
+      font-size: 1.75rem;
       font-weight: 800;
-      letter-spacing: -0.5px;
-      color: #fff;
+      letter-spacing: -0.03em;
+      color: var(--text);
       margin-bottom: 4px;
     }
 
     .company-tagline {
-      font-size: 13px;
-      color: #8b8fa8;
-      line-height: 1.5;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
       margin-bottom: 16px;
     }
 
@@ -128,26 +522,26 @@
       margin-top: 16px;
     }
 
-    .stat {}
-
     .stat .val {
-      font-size: 20px;
+      font-size: 1.25rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--text);
     }
 
     .stat .lbl {
-      font-size: 11px;
-      color: #5e6373;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    /* ── Person chip ── */
+    /* Person chip */
     .person {
       display: flex;
       align-items: center;
       gap: 10px;
       padding: 10px 0;
-      border-bottom: 1px solid #1e2028;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     }
 
     .person:last-child {
@@ -164,50 +558,51 @@
       font-size: 12px;
       font-weight: 700;
       flex-shrink: 0;
+      font-family: 'Space Mono', monospace;
     }
 
     .av-jp {
-      background: #2a3a8a;
-      color: #8cb4ff;
+      background: rgba(96, 165, 250, 0.2);
+      color: var(--accent-alt);
     }
 
     .av-may {
-      background: #3a2a6a;
-      color: #c4a0ff;
+      background: rgba(167, 139, 250, 0.2);
+      color: var(--accent);
     }
 
     .av-phil {
-      background: #1a3a2a;
-      color: #3ecf8e;
+      background: rgba(52, 211, 153, 0.2);
+      color: var(--accent-green);
     }
 
     .person-name {
-      font-size: 13px;
+      font-size: 0.9rem;
       font-weight: 600;
-      color: #e2e4e9;
+      color: var(--text);
     }
 
     .person-role {
-      font-size: 11px;
-      color: #5e6373;
+      font-size: 0.75rem;
+      color: var(--text-muted);
     }
 
     .person-note {
-      font-size: 10px;
-      color: #3ecf8e;
+      font-size: 0.7rem;
+      color: var(--accent-green);
       margin-top: 1px;
     }
 
-    /* ── JP background ── */
+    /* JP background */
     .jp-trait {
       display: flex;
       align-items: flex-start;
       gap: 8px;
       padding: 8px 0;
-      border-bottom: 1px solid #1e2028;
-      font-size: 12px;
-      line-height: 1.4;
-      color: #a0a4b8;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
     }
 
     .jp-trait:last-child {
@@ -218,18 +613,19 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: #4a6fd4;
+      background: var(--accent-alt);
       flex-shrink: 0;
-      margin-top: 4px;
+      margin-top: 5px;
     }
 
-    /* ── Pipeline ── */
+    /* Pipeline */
     .pipeline {
       display: flex;
       align-items: center;
       gap: 0;
       margin-top: 8px;
       overflow-x: auto;
+      padding-bottom: 8px;
     }
 
     .pipe-step {
@@ -237,57 +633,59 @@
       text-align: center;
       padding: 10px 6px;
       position: relative;
+      min-width: 100px;
     }
 
     .pipe-step .ps-label {
-      font-size: 10px;
+      font-size: 0.65rem;
       font-weight: 600;
-      color: #8b8fa8;
+      color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     .pipe-step .ps-status {
-      font-size: 9px;
-      margin-top: 3px;
-      padding: 2px 6px;
+      font-size: 0.6rem;
+      margin-top: 4px;
+      padding: 2px 8px;
       border-radius: 10px;
       display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .status-proto {
-      background: #1a2a4a;
-      color: #6a9fd4;
+      background: rgba(96, 165, 250, 0.1);
+      color: var(--accent-alt);
     }
 
     .status-live {
-      background: #1a3a2a;
-      color: #3ecf8e;
+      background: rgba(52, 211, 153, 0.1);
+      color: var(--accent-green);
     }
 
     .status-plan {
-      background: #2a2a1a;
-      color: #b8a040;
+      background: rgba(251, 191, 36, 0.1);
+      color: var(--accent-yellow);
     }
 
     .pipe-arrow {
-      color: #2e3040;
+      color: rgba(255, 255, 255, 0.1);
       font-size: 18px;
       flex-shrink: 0;
       padding: 0 2px;
     }
 
     .pipe-step.highlight .ps-label {
-      color: #fff;
+      color: var(--text);
     }
 
     .pipe-step.highlight {
-      background: #1a1c26;
+      background: rgba(167, 139, 250, 0.05);
       border-radius: 8px;
-      border: 1px solid #2e3a6a;
+      border: 1px solid rgba(167, 139, 250, 0.2);
     }
 
-    /* ── Newfi client card ── */
+    /* Newfi client card */
     .newfi-header {
       display: flex;
       align-items: center;
@@ -299,33 +697,33 @@
       width: 40px;
       height: 40px;
       border-radius: 8px;
-      background: #1a2a4a;
+      background: rgba(96, 165, 250, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 13px;
       font-weight: 800;
-      color: #6a9fd4;
-      border: 1px solid #2a3a5a;
+      color: var(--accent-alt);
+      border: 1px solid rgba(96, 165, 250, 0.2);
     }
 
     .newfi-name {
-      font-size: 16px;
+      font-size: 1rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--text);
     }
 
     .newfi-sub {
-      font-size: 11px;
-      color: #5e6373;
+      font-size: 0.7rem;
+      color: var(--text-muted);
     }
 
     .newfi-status {
       margin-left: auto;
-      font-size: 11px;
-      background: #2a2a1a;
-      color: #d4a830;
-      border: 1px solid #4a3a10;
+      font-size: 0.7rem;
+      background: rgba(251, 191, 36, 0.1);
+      color: var(--accent-yellow);
+      border: 1px solid rgba(251, 191, 36, 0.3);
       padding: 3px 10px;
       border-radius: 20px;
       font-weight: 600;
@@ -336,8 +734,8 @@
       justify-content: space-between;
       align-items: center;
       padding: 7px 0;
-      border-bottom: 1px solid #1e2028;
-      font-size: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.8rem;
     }
 
     .kv-row:last-child {
@@ -345,29 +743,29 @@
     }
 
     .kv-key {
-      color: #5e6373;
+      color: var(--text-muted);
     }
 
     .kv-val {
-      color: #e2e4e9;
+      color: var(--text);
       font-weight: 500;
       text-align: right;
       max-width: 60%;
     }
 
     .kv-val.green {
-      color: #3ecf8e;
+      color: var(--accent-green);
     }
 
     .kv-val.yellow {
-      color: #d4a830;
+      color: var(--accent-yellow);
     }
 
-    /* ── Contacts list ── */
+    /* Contacts list */
     .contact {
       padding: 8px 0;
-      border-bottom: 1px solid #1e2028;
-      font-size: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.8rem;
     }
 
     .contact:last-child {
@@ -376,39 +774,40 @@
 
     .contact .cname {
       font-weight: 600;
-      color: #e2e4e9;
+      color: var(--text);
     }
 
     .contact .crole {
-      color: #5e6373;
-      font-size: 11px;
+      color: var(--text-muted);
+      font-size: 0.7rem;
     }
 
     .contact .cnote {
-      color: #8b8fa8;
-      font-size: 11px;
+      color: var(--text-secondary);
+      font-size: 0.7rem;
       margin-top: 1px;
     }
 
-    /* ── Agent / prompt card ── */
+    /* Agent / prompt card */
     .version-pill {
       display: inline-block;
-      font-size: 11px;
+      font-size: 0.7rem;
       font-weight: 700;
-      background: #2a1a3a;
-      color: #c4a0ff;
-      border: 1px solid #4a2a6a;
+      background: rgba(167, 139, 250, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(167, 139, 250, 0.3);
       padding: 2px 8px;
       border-radius: 10px;
       margin-bottom: 14px;
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .rule-row {
       padding: 7px 0;
-      border-bottom: 1px solid #1e2028;
-      font-size: 11px;
-      line-height: 1.4;
-      color: #8b8fa8;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.75rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
     }
 
     .rule-row:last-child {
@@ -416,13 +815,13 @@
     }
 
     .rule-row strong {
-      color: #e2e4e9;
+      color: var(--text);
     }
 
-    /* ── Output columns ── */
+    /* Output columns */
     .col-chip {
       display: inline-block;
-      font-size: 10px;
+      font-size: 0.65rem;
       font-weight: 600;
       padding: 3px 8px;
       border-radius: 6px;
@@ -432,43 +831,43 @@
     }
 
     .col-match {
-      background: #1a3a2a;
-      color: #3ecf8e;
+      background: rgba(52, 211, 153, 0.1);
+      color: var(--accent-green);
     }
 
     .col-partial {
-      background: #2a2a1a;
-      color: #d4a830;
+      background: rgba(251, 191, 36, 0.1);
+      color: var(--accent-yellow);
     }
 
     .col-conflict {
-      background: #3a1a1a;
-      color: #d46a6a;
+      background: rgba(244, 114, 182, 0.1);
+      color: var(--accent-pink);
     }
 
     .col-low {
-      background: #1a2a1a;
-      color: #60b060;
+      background: rgba(52, 211, 153, 0.08);
+      color: var(--accent-green);
     }
 
     .col-moderate {
-      background: #2a2510;
-      color: #c4a030;
+      background: rgba(251, 191, 36, 0.08);
+      color: var(--accent-yellow);
     }
 
     .col-high {
-      background: #2a1a1a;
-      color: #c46060;
+      background: rgba(244, 114, 182, 0.08);
+      color: var(--accent-pink);
     }
 
-    /* ── Tech stack ── */
+    /* Tech stack */
     .stack-item {
       display: flex;
       align-items: center;
       gap: 10px;
       padding: 8px 0;
-      border-bottom: 1px solid #1e2028;
-      font-size: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.8rem;
     }
 
     .stack-item:last-child {
@@ -479,7 +878,7 @@
       width: 28px;
       height: 28px;
       border-radius: 6px;
-      background: #1e2028;
+      background: rgba(255, 255, 255, 0.05);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -489,27 +888,27 @@
 
     .stack-name {
       font-weight: 600;
-      color: #e2e4e9;
+      color: var(--text);
     }
 
     .stack-role {
-      font-size: 11px;
-      color: #5e6373;
+      font-size: 0.7rem;
+      color: var(--text-muted);
     }
 
-    /* ── Domain areas ── */
+    /* Domain areas */
     .domain-chip {
       display: inline-block;
-      background: #1a1c26;
-      border: 1px solid #2a2d3a;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 6px;
       padding: 5px 10px;
-      font-size: 11px;
-      color: #8b8fa8;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
       margin: 3px;
     }
 
-    /* ── Roadmap ── */
+    /* Roadmap */
     .tier {
       padding: 12px;
       border-radius: 8px;
@@ -517,393 +916,677 @@
     }
 
     .tier-1 {
-      background: #1a2a1a;
-      border: 1px solid #2a4a2a;
+      background: rgba(52, 211, 153, 0.05);
+      border: 1px solid rgba(52, 211, 153, 0.15);
     }
 
     .tier-2 {
-      background: #1a1a2a;
-      border: 1px solid #2a2a4a;
+      background: rgba(96, 165, 250, 0.05);
+      border: 1px solid rgba(96, 165, 250, 0.15);
     }
 
     .tier-label {
-      font-size: 11px;
+      font-size: 0.7rem;
       font-weight: 700;
       margin-bottom: 6px;
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .tier-1 .tier-label {
-      color: #3ecf8e;
+      color: var(--accent-green);
     }
 
     .tier-2 .tier-label {
-      color: #8b8fa8;
+      color: var(--text-muted);
     }
 
     .tier-items {
-      font-size: 11px;
-      color: #8b8fa8;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
       line-height: 1.7;
     }
 
-    /* ── Section divider ── */
+    /* Section divider */
     .section-label {
       grid-column: span 12;
-      font-size: 10px;
-      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #2e3040;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
       padding: 8px 0 0;
-      border-top: 1px solid #1a1c22;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
       margin-top: 4px;
     }
 
-    @media (max-width: 900px) {
+    /* ===== FOOTER ===== */
+    footer {
+      padding: 3rem 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      z-index: 10;
+    }
 
-      .span-4,
-      .span-3,
-      .span-5,
-      .span-7,
-      .span-6,
-      .span-8 {
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .footer-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-cyan));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #000;
+    }
+
+    .footer-name {
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .footer-social a:hover {
+      background: rgba(167, 139, 250, 0.1);
+      border-color: rgba(167, 139, 250, 0.3);
+      color: var(--text);
+    }
+
+    /* ===== REVEAL ANIMATIONS ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s var(--transition-smooth), transform 0.7s var(--transition-smooth);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+    .reveal-delay-4 { transition-delay: 0.32s; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .span-4, .span-3, .span-5, .span-7, .span-6, .span-8 {
+        grid-column: span 6;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .span-4, .span-3, .span-5, .span-7, .span-6, .span-8, .span-12 {
         grid-column: span 12;
       }
 
       .stat-row {
         flex-wrap: wrap;
       }
+
+      .pipeline {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .pipe-arrow {
+        transform: rotate(90deg);
+      }
+
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 1rem;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+
+    /* ===== REDUCED MOTION ===== */
+    @media (prefers-reduced-motion: reduce) {
+      .corner-frame line { animation: none; stroke-dashoffset: 0; }
+      .corner-line { animation: none; transform: scaleX(1); }
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
     }
   </style>
 </head>
 
 <body>
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scroll-progress"></div>
 
-  <div class="header">
-    <h1>Larper.ai</h1>
-    <span class="sub">Knowledge Map · as of 2026-04-10</span>
-    <span class="badge">LIVE · Newfi Engagement</span>
+  <!-- Background -->
+  <div class="bg-container">
+    <div class="mesh-gradient"></div>
+    <div class="grid-pattern"></div>
+    <div class="noise"></div>
+    <svg class="corner-frame corner-tl" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <line x1="0" y1="1" x2="60" y2="1" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+      <line x1="1" y1="0" x2="1" y2="60" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+    </svg>
+    <svg class="corner-frame corner-tr" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <line x1="0" y1="1" x2="60" y2="1" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+      <line x1="59" y1="0" x2="59" y2="60" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+    </svg>
+    <svg class="corner-frame corner-bl" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <line x1="1" y1="60" x2="1" y2="0" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+      <line x1="0" y1="59" x2="60" y2="59" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+    </svg>
+    <svg class="corner-frame corner-br" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <line x1="59" y1="60" x2="59" y2="0" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+      <line x1="60" y1="59" x2="0" y2="59" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+    </svg>
+    <div class="corner-line corner-line-top" aria-hidden="true"></div>
+    <div class="corner-line corner-line-bottom" aria-hidden="true"></div>
   </div>
 
-  <div class="grid">
-
-    <!-- ── Company overview ── -->
-    <div class="card span-4">
-      <div class="card-title">Company</div>
-      <div class="company-name">LARPER.AI</div>
-      <div class="company-tagline">AI systems firm building workflow automation and decision-support tooling for
-        mortgage lending operations.</div>
-      <div style="font-size:11px; color:#5e6373;">Stage: Early-stage startup · Domain: Non-QM mortgage AI</div>
-      <div class="stat-row">
-        <div class="stat">
-          <div class="val">1</div>
-          <div class="lbl">Client</div>
-        </div>
-        <div class="stat">
-          <div class="val">3</div>
-          <div class="lbl">Team</div>
-        </div>
-        <div class="stat">
-          <div class="val">Tier 1</div>
-          <div class="lbl">Current</div>
-        </div>
-      </div>
+  <!-- Header -->
+  <header class="site-header" id="header">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">
+        <div class="brand-icon">L</div>
+        <span class="brand-text">larper.ai</span>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="index.html"><span>Home</span></a>
+        <a href="about.html"><span>About</span></a>
+        <a href="larper-knowledge-map.html" class="active" aria-current="page"><span>Knowledge</span></a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
+  </header>
 
-    <!-- ── JP background ── -->
-    <div class="card span-4">
-      <div class="card-title">Founder · JP (John Boyles)</div>
-      <div class="jp-trait">
-        <div class="dot"></div><span><strong style="color:#e2e4e9;">Industry roots</strong> — father in capital markets,
-          mother was an underwriter. Grew up around non-QM lending.</span>
-      </div>
-      <div class="jp-trait">
-        <div class="dot"></div><span><strong style="color:#e2e4e9;">Early AI adopter</strong> — using ChatGPT since
-          launch. Fluent in Cursor, Google Suite.</span>
-      </div>
-      <div class="jp-trait">
-        <div class="dot"></div><span><strong style="color:#e2e4e9;">Vibecoder</strong> — AI agent-first workflow. Builds
-          via AI-assisted dev, not traditional coding.</span>
-      </div>
-      <div class="jp-trait">
-        <div class="dot"></div><span><strong style="color:#e2e4e9;">Origin story</strong> — pitched Victoria Clement
-          (John Sr.'s boss at Newfi) via slide deck → became first client.</span>
-      </div>
-      <div class="jp-trait">
-        <div class="dot"></div><span><strong style="color:#e2e4e9;">Email:</strong> john@larper.ai</span>
-      </div>
+  <!-- Mobile Nav Overlay -->
+  <div class="mobile-nav-overlay" id="mobile-nav">
+    <div class="mobile-nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="larper-knowledge-map.html" class="active">Knowledge</a>
     </div>
+  </div>
 
-    <!-- ── Team ── -->
-    <div class="card span-4">
-      <div class="card-title">Team</div>
-      <div class="person">
-        <div class="avatar av-jp">JP</div>
-        <div>
-          <div class="person-name">John Boyles (JP)</div>
-          <div class="person-role">Founder · john@larper.ai</div>
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <!-- Page Header -->
+      <div class="page-header reveal">
+        <div class="page-header-content">
+          <h1>Larper.ai</h1>
+          <span class="sub">Knowledge Map · as of 2026-04-10</span>
+          <span class="badge">LIVE · Newfi Engagement</span>
         </div>
       </div>
-      <div class="person">
-        <div class="avatar av-may">M</div>
-        <div>
-          <div class="person-name">Mayank Sharma</div>
-          <div class="person-role">Co-founder / Developer · mayank@larper.ai</div>
-          <div class="person-note">GitHub: ox-9</div>
-        </div>
-      </div>
-      <div class="person" style="opacity:0.45;">
-        <div class="avatar av-phil">P</div>
-        <div>
-          <div class="person-name" style="text-decoration:line-through;">Philip</div>
-          <div class="person-role">Developer (PDF Converter) — departed</div>
-          <div class="person-note" style="color:#5e6373;">School scheduling conflict · converter repo ownership TBD
+
+      <!-- Knowledge Grid -->
+      <div class="grid">
+        <!-- Company overview -->
+        <div class="card span-4 reveal" data-animate="scroll">
+          <div class="card-title">Company</div>
+          <div class="company-name">LARPER.AI</div>
+          <div class="company-tagline">AI systems firm building workflow automation and decision-support tooling for mortgage lending operations.</div>
+          <div style="font-size:0.7rem; color:var(--text-muted);">Stage: Early-stage startup · Domain: Non-QM mortgage AI</div>
+          <div class="stat-row">
+            <div class="stat">
+              <div class="val">1</div>
+              <div class="lbl">Client</div>
+            </div>
+            <div class="stat">
+              <div class="val">3</div>
+              <div class="lbl">Team</div>
+            </div>
+            <div class="stat">
+              <div class="val">Tier 1</div>
+              <div class="lbl">Current</div>
+            </div>
           </div>
         </div>
+
+        <!-- JP background -->
+        <div class="card span-4 reveal reveal-delay-1" data-animate="scroll">
+          <div class="card-title">Founder · JP (John Boyles)</div>
+          <div class="jp-trait">
+            <div class="dot"></div><span><strong style="color:var(--text);">Industry roots</strong> — father in capital markets, mother was an underwriter. Grew up around non-QM lending.</span>
+          </div>
+          <div class="jp-trait">
+            <div class="dot"></div><span><strong style="color:var(--text);">Early AI adopter</strong> — using ChatGPT since launch. Fluent in Cursor, Google Suite.</span>
+          </div>
+          <div class="jp-trait">
+            <div class="dot"></div><span><strong style="color:var(--text);">Vibecoder</strong> — AI agent-first workflow. Builds via AI-assisted dev, not traditional coding.</span>
+          </div>
+          <div class="jp-trait">
+            <div class="dot"></div><span><strong style="color:var(--text);">Origin story</strong> — pitched Victoria Clement (John Sr.'s boss at Newfi) via slide deck → became first client.</span>
+          </div>
+          <div class="jp-trait">
+            <div class="dot"></div><span><strong style="color:var(--text);">Email:</strong> john@larper.ai</span>
+          </div>
+        </div>
+
+        <!-- Team -->
+        <div class="card span-4 reveal reveal-delay-2" data-animate="scroll">
+          <div class="card-title">Team</div>
+          <div class="person">
+            <div class="avatar av-jp">JP</div>
+            <div>
+              <div class="person-name">John Boyles (JP)</div>
+              <div class="person-role">Founder · john@larper.ai</div>
+            </div>
+          </div>
+          <div class="person">
+            <div class="avatar av-may">M</div>
+            <div>
+              <div class="person-name">Mayank Sharma</div>
+              <div class="person-role">Co-founder / Developer · mayank@larper.ai</div>
+              <div class="person-note">GitHub: ox-9</div>
+            </div>
+          </div>
+          <div class="person" style="opacity:0.45;">
+            <div class="avatar av-phil">P</div>
+            <div>
+              <div class="person-name" style="text-decoration:line-through;">Philip</div>
+              <div class="person-role">Developer (PDF Converter) — departed</div>
+              <div class="person-note" style="color:var(--text-muted);">School scheduling conflict · converter repo ownership TBD</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pipeline -->
+        <div class="card span-12 reveal" data-animate="scroll">
+          <div class="card-title">Pipeline · PDF Guideline → Structured Output</div>
+          <div class="pipeline">
+            <div class="pipe-step">
+              <div class="ps-label">PDF Intake</div>
+              <div class="ps-status status-proto">Prototype</div>
+            </div>
+            <div class="pipe-arrow">›</div>
+            <div class="pipe-step highlight">
+              <div class="ps-label">PDF → TXT Converter</div>
+              <div class="ps-status status-proto">Prototype · owner TBD</div>
+            </div>
+            <div class="pipe-arrow">›</div>
+            <div class="pipe-step">
+              <div class="ps-label">Normalizer</div>
+              <div class="ps-status status-proto">Prototype</div>
+            </div>
+            <div class="pipe-arrow">›</div>
+            <div class="pipe-step highlight">
+              <div class="ps-label">Guideline Comparator</div>
+              <div class="ps-status status-live">Live · v2.3</div>
+            </div>
+            <div class="pipe-arrow">›</div>
+            <div class="pipe-step">
+              <div class="ps-label">Output Formatter</div>
+              <div class="ps-status status-proto">Prototype</div>
+            </div>
+            <div class="pipe-arrow">›</div>
+            <div class="pipe-step">
+              <div class="ps-label">Orchestration Layer</div>
+              <div class="ps-status status-plan">Tier 2</div>
+            </div>
+            <div class="pipe-arrow">›</div>
+            <div class="pipe-step">
+              <div class="ps-label">Dedicated UI</div>
+              <div class="ps-status status-plan">Tier 2</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Newfi engagement -->
+        <div class="card span-5 reveal" data-animate="scroll">
+          <div class="card-title">Client · Newfi Lending</div>
+          <div class="newfi-header">
+            <div class="newfi-logo">NF</div>
+            <div>
+              <div class="newfi-name">Newfi Lending</div>
+              <div class="newfi-sub">Apollo affiliate · Correspondent lending</div>
+            </div>
+            <div class="newfi-status">Contract Finalizing</div>
+          </div>
+          <div class="kv-row"><span class="kv-key">Entry point</span><span class="kv-val">Tier 1 · $3,250 + $380/mo</span></div>
+          <div class="kv-row"><span class="kv-key">SOW submitted</span><span class="kv-val">Apr 6, 2026</span></div>
+          <div class="kv-row"><span class="kv-key">CEO approval</span><span class="kv-val green">Steve Abreu · Apr 7</span></div>
+          <div class="kv-row"><span class="kv-key">Intro call</span><span class="kv-val yellow">Mon Apr 14 · Brett + Dana</span></div>
+          <div class="kv-row"><span class="kv-key">Completed work</span><span class="kv-val green">CCM review (v1 output)</span></div>
+          <div class="kv-row"><span class="kv-key">Next sellers</span><span class="kv-val">KIND → AFN</span></div>
+          <div class="kv-row"><span class="kv-key">Workstreams</span><span class="kv-val">CORR Look Back · New Seller Reviews</span></div>
+        </div>
+
+        <!-- Newfi contacts -->
+        <div class="card span-4 reveal reveal-delay-1" data-animate="scroll">
+          <div class="card-title">Newfi Contacts</div>
+          <div class="contact">
+            <span class="cname">John Boyles Sr.</span>
+            <span class="cnote"> — internal champion</span>
+            <div class="crole">JP's father · Signs as /jb</div>
+          </div>
+          <div class="contact">
+            <span class="cname">Victoria Clement</span>
+            <div class="crole">EVP Correspondent · Initial contact · John Sr.'s boss</div>
+          </div>
+          <div class="contact">
+            <span class="cname">Brett Arnold</span>
+            <div class="crole">SVP Correspondent · Day-to-day lead</div>
+          </div>
+          <div class="contact">
+            <span class="cname">Dana Miller</span>
+            <div class="crole">Product Dev Specialist · Reviewed CCM output</div>
+          </div>
+          <div class="contact">
+            <span class="cname">Michelle Constantine</span>
+            <div class="crole">Ops/review coordination</div>
+          </div>
+          <div class="contact">
+            <span class="cname">Steve Abreu</span>
+            <div class="crole">Founder & CEO · Approved Apr 7</div>
+          </div>
+        </div>
+
+        <!-- Contract -->
+        <div class="card span-3 reveal reveal-delay-2" data-animate="scroll">
+          <div class="card-title">Contract Package</div>
+          <div class="kv-row"><span class="kv-key">SOW</span><span class="kv-val green">Submitted</span></div>
+          <div class="kv-row"><span class="kv-key">RSA</span><span class="kv-val yellow">In progress</span></div>
+          <div class="kv-row"><span class="kv-key">ICA</span><span class="kv-val yellow">Ashley drafting</span></div>
+          <div class="kv-row"><span class="kv-key">NDA</span><span class="kv-val yellow">In progress</span></div>
+          <div style="margin-top:14px; font-size:0.7rem; color:var(--text-muted);">Competitive context: Newfi tried other AI tools first. Larper.ai currently "best results of previous AI tools" (Michelle C., Apr 6)</div>
+        </div>
+
+        <!-- Comparator agent -->
+        <div class="card span-6 reveal" data-animate="scroll">
+          <div class="card-title">Core Agent · Guideline Comparator</div>
+          <div class="version-pill">v2.3</div>
+          <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:12px;">Origin: built as a ChatGPT custom GPT (v1) → migrated to Claude. Prompt v2.3 finalized after CCM review feedback (Dana Miller).</div>
+          <div class="rule-row"><strong>Absolute Rule</strong> — Column F (verbatim Seller text) required on ALL rows, including aligned rows. No exceptions.</div>
+          <div class="rule-row"><strong>Supplemental Doc Rule</strong> — All Seller supplements must be uploaded before comparison begins.</div>
+          <div class="rule-row"><strong>Overlay Rule</strong> — AI reads Newfi Overlays doc first, lists affected rows, applies overlay-modified requirements throughout.</div>
+          <div class="rule-row"><strong>REVIEW REQUIRED Hard Stop</strong> — Any instance = halt before delivery. Must resolve to clean finding.</div>
+          <div class="rule-row"><strong>Self-validation</strong> — 10 checks (expanded from 7 in v2.2). Checks 8–10: supplements used, overlays applied, sweep for REVIEW REQUIRED.</div>
+          <div style="margin-top:12px;">
+            <span class="col-chip col-match">Match</span>
+            <span class="col-chip col-partial">Partial Match</span>
+            <span class="col-chip col-conflict">Conflict</span>
+            <span class="col-chip col-low">Low Risk</span>
+            <span class="col-chip col-moderate">Moderate Risk</span>
+            <span class="col-chip col-high">High Risk</span>
+          </div>
+        </div>
+
+        <!-- Domain -->
+        <div class="card span-3 reveal reveal-delay-1" data-animate="scroll">
+          <div class="card-title">Domain · Mortgage (Non-QM)</div>
+          <div style="margin-bottom:10px;">
+            <div class="domain-chip">Income</div>
+            <div class="domain-chip">Credit</div>
+            <div class="domain-chip">Assets & Reserves</div>
+            <div class="domain-chip">Property</div>
+            <div class="domain-chip">Loan Terms / Programs</div>
+          </div>
+          <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.6;">
+            <strong style="color:var(--text-secondary);">Key terms:</strong><br/>
+            DSCR · LTV · PPP · Overlay · Non-QM · Underwriting<br/><br/>
+            Not Fannie/Freddie — no federal mandate. Each lender sets own guidelines.
+          </div>
+        </div>
+
+        <!-- Tech stack -->
+        <div class="card span-3 reveal reveal-delay-2" data-animate="scroll">
+          <div class="card-title">Tech Stack</div>
+          <div class="stack-item">
+            <div class="stack-icon">⌨️</div>
+            <div>
+              <div class="stack-name">Cursor Pro</div>
+              <div class="stack-role">AI-assisted IDE</div>
+            </div>
+          </div>
+          <div class="stack-item">
+            <div class="stack-icon">🤖</div>
+            <div>
+              <div class="stack-name">ChatGPT Business</div>
+              <div class="stack-role">LLM backbone (current)</div>
+            </div>
+          </div>
+          <div class="stack-item">
+            <div class="stack-icon">🧠</div>
+            <div>
+              <div class="stack-name">Claude Code</div>
+              <div class="stack-role">AI coding agent · vibecoding + wiki</div>
+            </div>
+          </div>
+          <div class="stack-item">
+            <div class="stack-icon">▲</div>
+            <div>
+              <div class="stack-name">Vercel</div>
+              <div class="stack-role">Deployment / hosting</div>
+            </div>
+          </div>
+          <div class="stack-item">
+            <div class="stack-icon">⚡</div>
+            <div>
+              <div class="stack-name">VS Code</div>
+              <div class="stack-role">Additional editor</div>
+            </div>
+          </div>
+          <div class="stack-item">
+            <div class="stack-icon">🐙</div>
+            <div>
+              <div class="stack-name">LarperAi (GitHub)</div>
+              <div class="stack-role">larper-web · converter repos</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roadmap -->
+        <div class="card span-3 reveal" data-animate="scroll">
+          <div class="card-title">Roadmap</div>
+          <div class="tier tier-1">
+            <div class="tier-label">TIER 1 · Current</div>
+            <div class="tier-items">
+              Manual workflow across tabs<br/>
+              PDF → TXT → GPT → output<br/>
+              Larper.ai operated
+            </div>
+          </div>
+          <div class="tier tier-2">
+            <div class="tier-label">TIER 2 · Planned</div>
+            <div class="tier-items">
+              Unified app environment<br/>
+              API-driven orchestration<br/>
+              Dedicated UI<br/>
+              Role-based controls<br/>
+              Newfi self-operated
+            </div>
+          </div>
+        </div>
+
+        <!-- Success criteria -->
+        <div class="card span-6 reveal reveal-delay-1" data-animate="scroll">
+          <div class="card-title">True Success Criteria (John Sr., Apr 6)</div>
+          <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.8; columns: 2; gap: 24px;">
+            <div style="margin-bottom: 4px;">✓ Runs end-to-end without manual prep</div>
+            <div style="margin-bottom: 4px;">✓ PDFs extract cleanly regardless of format</div>
+            <div style="margin-bottom: 4px;">✓ Match/Partial/Conflict reliable for underwriters</div>
+            <div style="margin-bottom: 4px;">✓ Output immediately actionable — no reformatting</div>
+            <div style="margin-bottom: 4px;">✓ Runs in Newfi's environment, staff operate independently</div>
+            <div style="color:var(--accent-green); font-weight:600;">✓ New lender PDF in → comparison out. No Larper.ai involvement.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Note -->
+      <div style="margin-top: 40px; font-size: 0.7rem; color: var(--text-muted); text-align: center; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.04); font-family: 'JetBrains Mono', monospace;">
+        Generated from larper-brain wiki · 2026-04-10
       </div>
     </div>
+  </main>
 
-    <!-- ── Pipeline ── -->
-    <div class="card span-12">
-      <div class="card-title">Pipeline · PDF Guideline → Structured Output</div>
-      <div class="pipeline">
-        <div class="pipe-step">
-          <div class="ps-label">PDF Intake</div>
-          <div class="ps-status status-proto">Prototype</div>
-        </div>
-        <div class="pipe-arrow">›</div>
-        <div class="pipe-step highlight">
-          <div class="ps-label">PDF → TXT Converter</div>
-          <div class="ps-status status-proto">Prototype · owner TBD</div>
-        </div>
-        <div class="pipe-arrow">›</div>
-        <div class="pipe-step">
-          <div class="ps-label">Normalizer</div>
-          <div class="ps-status status-proto">Prototype</div>
-        </div>
-        <div class="pipe-arrow">›</div>
-        <div class="pipe-step highlight">
-          <div class="ps-label">Guideline Comparator</div>
-          <div class="ps-status status-live">Live · v2.3</div>
-        </div>
-        <div class="pipe-arrow">›</div>
-        <div class="pipe-step">
-          <div class="ps-label">Output Formatter</div>
-          <div class="ps-status status-proto">Prototype</div>
-        </div>
-        <div class="pipe-arrow">›</div>
-        <div class="pipe-step">
-          <div class="ps-label">Orchestration Layer</div>
-          <div class="ps-status status-plan">Tier 2</div>
-        </div>
-        <div class="pipe-arrow">›</div>
-        <div class="pipe-step">
-          <div class="ps-label">Dedicated UI</div>
-          <div class="ps-status status-plan">Tier 2</div>
-        </div>
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">L</div>
+        <span class="footer-name">larper.ai</span>
+      </div>
+      <div class="footer-links">
+        <a href="#">Documentation</a>
+        <a href="about.html">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-social">
+        <a href="#" aria-label="Twitter">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 1.2 3.1 1.2 4-.1z" />
+          </svg>
+        </a>
+        <a href="#" aria-label="GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.69-1.54 6.69-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.54 6.61 6.69 7A3.37 3.37 0 0 0 9 18.13V22" />
+          </svg>
+        </a>
+        <a href="#" aria-label="LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+            <rect x="2" y="9" width="4" height="12" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
       </div>
     </div>
+  </footer>
 
-    <!-- ── Newfi engagement ── -->
-    <div class="card span-5">
-      <div class="card-title">Client · Newfi Lending</div>
-      <div class="newfi-header">
-        <div class="newfi-logo">NF</div>
-        <div>
-          <div class="newfi-name">Newfi Lending</div>
-          <div class="newfi-sub">Apollo affiliate · Correspondent lending</div>
-        </div>
-        <div class="newfi-status">Contract Finalizing</div>
-      </div>
-      <div class="kv-row"><span class="kv-key">Entry point</span><span class="kv-val">Tier 1 · $3,250 + $380/mo</span>
-      </div>
-      <div class="kv-row"><span class="kv-key">SOW submitted</span><span class="kv-val">Apr 6, 2026</span></div>
-      <div class="kv-row"><span class="kv-key">CEO approval</span><span class="kv-val green">Steve Abreu · Apr 7</span>
-      </div>
-      <div class="kv-row"><span class="kv-key">Intro call</span><span class="kv-val yellow">Mon Apr 14 · Brett +
-          Dana</span></div>
-      <div class="kv-row"><span class="kv-key">Completed work</span><span class="kv-val green">CCM review (v1
-          output)</span></div>
-      <div class="kv-row"><span class="kv-key">Next sellers</span><span class="kv-val">KIND → AFN</span></div>
-      <div class="kv-row"><span class="kv-key">Workstreams</span><span class="kv-val">CORR Look Back · New Seller
-          Reviews</span></div>
-    </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // ===== SCROLL PROGRESS =====
+      const scrollProgress = document.getElementById('scroll-progress');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = scrollTop / docHeight;
+        scrollProgress.style.transform = `scaleX(${scrollPercent})`;
+      });
 
-    <!-- ── Newfi contacts ── -->
-    <div class="card span-4">
-      <div class="card-title">Newfi Contacts</div>
-      <div class="contact">
-        <span class="cname">John Boyles Sr.</span>
-        <span class="cnote"> — internal champion</span>
-        <div class="crole">JP's father · Signs as /jb</div>
-      </div>
-      <div class="contact">
-        <span class="cname">Victoria Clement</span>
-        <div class="crole">EVP Correspondent · Initial contact · John Sr.'s boss</div>
-      </div>
-      <div class="contact">
-        <span class="cname">Brett Arnold</span>
-        <div class="crole">SVP Correspondent · Day-to-day lead</div>
-      </div>
-      <div class="contact">
-        <span class="cname">Dana Miller</span>
-        <div class="crole">Product Dev Specialist · Reviewed CCM output</div>
-      </div>
-      <div class="contact">
-        <span class="cname">Michelle Constantine</span>
-        <div class="crole">Ops/review coordination</div>
-      </div>
-      <div class="contact">
-        <span class="cname">Steve Abreu</span>
-        <div class="crole">Founder & CEO · Approved Apr 7</div>
-      </div>
-    </div>
+      // ===== HEADER SCROLL =====
+      const header = document.getElementById('header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
 
-    <!-- ── Contract ── -->
-    <div class="card span-3">
-      <div class="card-title">Contract Package</div>
-      <div class="kv-row"><span class="kv-key">SOW</span><span class="kv-val green">Submitted</span></div>
-      <div class="kv-row"><span class="kv-key">RSA</span><span class="kv-val yellow">In progress</span></div>
-      <div class="kv-row"><span class="kv-key">ICA</span><span class="kv-val yellow">Ashley drafting</span></div>
-      <div class="kv-row"><span class="kv-key">NDA</span><span class="kv-val yellow">In progress</span></div>
-      <div style="margin-top:14px; font-size:11px; color:#5e6373;">Competitive context: Newfi tried other AI tools
-        first. Larper.ai currently "best results of previous AI tools" (Michelle C., Apr 6)</div>
-    </div>
+      // ===== SCROLL REVEAL =====
+      const revealElements = document.querySelectorAll('.reveal');
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-    <!-- ── Comparator agent ── -->
-    <div class="card span-6">
-      <div class="card-title">Core Agent · Guideline Comparator</div>
-      <div class="version-pill">v2.3</div>
-      <div style="font-size:11px; color:#5e6373; margin-bottom:12px;">Origin: built as a ChatGPT custom GPT (v1) →
-        migrated to Claude. Prompt v2.3 finalized after CCM review feedback (Dana Miller).</div>
-      <div class="rule-row"><strong>Absolute Rule</strong> — Column F (verbatim Seller text) required on ALL rows,
-        including aligned rows. No exceptions.</div>
-      <div class="rule-row"><strong>Supplemental Doc Rule</strong> — All Seller supplements must be uploaded before
-        comparison begins.</div>
-      <div class="rule-row"><strong>Overlay Rule</strong> — AI reads Newfi Overlays doc first, lists affected rows,
-        applies overlay-modified requirements throughout.</div>
-      <div class="rule-row"><strong>REVIEW REQUIRED Hard Stop</strong> — Any instance = halt before delivery. Must
-        resolve to clean finding.</div>
-      <div class="rule-row"><strong>Self-validation</strong> — 10 checks (expanded from 7 in v2.2). Checks 8–10:
-        supplements used, overlays applied, sweep for REVIEW REQUIRED.</div>
-      <div style="margin-top:12px;">
-        <span class="col-chip col-match">Match</span>
-        <span class="col-chip col-partial">Partial Match</span>
-        <span class="col-chip col-conflict">Conflict</span>
-        <span class="col-chip col-low">Low Risk</span>
-        <span class="col-chip col-moderate">Moderate Risk</span>
-        <span class="col-chip col-high">High Risk</span>
-      </div>
-    </div>
+      revealElements.forEach(el => revealObserver.observe(el));
 
-    <!-- ── Domain ── -->
-    <div class="card span-3">
-      <div class="card-title">Domain · Mortgage (Non-QM)</div>
-      <div style="margin-bottom:10px;">
-        <div class="domain-chip">Income</div>
-        <div class="domain-chip">Credit</div>
-        <div class="domain-chip">Assets & Reserves</div>
-        <div class="domain-chip">Property</div>
-        <div class="domain-chip">Loan Terms / Programs</div>
-      </div>
-      <div style="font-size:11px; color:#5e6373; line-height:1.6;">
-        <strong style="color:#8b8fa8;">Key terms:</strong><br />
-        DSCR · LTV · PPP · Overlay · Non-QM · Underwriting<br /><br />
-        Not Fannie/Freddie — no federal mandate. Each lender sets own guidelines.
-      </div>
-    </div>
+      // ===== MOBILE NAV =====
+      const hamburger = document.getElementById('hamburger');
+      const mobileNav = document.getElementById('mobile-nav');
 
-    <!-- ── Tech stack ── -->
-    <div class="card span-3">
-      <div class="card-title">Tech Stack</div>
-      <div class="stack-item">
-        <div class="stack-icon">⌨️</div>
-        <div>
-          <div class="stack-name">Cursor Pro</div>
-          <div class="stack-role">AI-assisted IDE</div>
-        </div>
-      </div>
-      <div class="stack-item">
-        <div class="stack-icon">🤖</div>
-        <div>
-          <div class="stack-name">ChatGPT Business</div>
-          <div class="stack-role">LLM backbone (current)</div>
-        </div>
-      </div>
-      <div class="stack-item">
-        <div class="stack-icon">🧠</div>
-        <div>
-          <div class="stack-name">Claude Code</div>
-          <div class="stack-role">AI coding agent · vibecoding + wiki</div>
-        </div>
-      </div>
-      <div class="stack-item">
-        <div class="stack-icon">▲</div>
-        <div>
-          <div class="stack-name">Vercel</div>
-          <div class="stack-role">Deployment / hosting</div>
-        </div>
-      </div>
-      <div class="stack-item">
-        <div class="stack-icon">⚡</div>
-        <div>
-          <div class="stack-name">VS Code</div>
-          <div class="stack-role">Additional editor</div>
-        </div>
-      </div>
-      <div class="stack-item">
-        <div class="stack-icon">🐙</div>
-        <div>
-          <div class="stack-name">LarperAi (GitHub)</div>
-          <div class="stack-role">larper-web · converter repos</div>
-        </div>
-      </div>
-    </div>
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        mobileNav.classList.toggle('active');
+        document.body.classList.toggle('modal-open');
+      });
 
-    <!-- ── Roadmap ── -->
-    <div class="card span-3">
-      <div class="card-title">Roadmap</div>
-      <div class="tier tier-1">
-        <div class="tier-label">TIER 1 · Current</div>
-        <div class="tier-items">
-          Manual workflow across tabs<br />
-          PDF → TXT → GPT → output<br />
-          Larper.ai operated
-        </div>
-      </div>
-      <div class="tier tier-2">
-        <div class="tier-label">TIER 2 · Planned</div>
-        <div class="tier-items">
-          Unified app environment<br />
-          API-driven orchestration<br />
-          Dedicated UI<br />
-          Role-based controls<br />
-          Newfi self-operated
-        </div>
-      </div>
-    </div>
-
-    <!-- ── Success criteria ── -->
-    <div class="card span-6">
-      <div class="card-title">True Success Criteria (John Sr., Apr 6)</div>
-      <div style="font-size:12px; color:#8b8fa8; line-height:1.8; columns: 2; gap: 24px;">
-        <div>✓ Runs end-to-end without manual prep</div>
-        <div>✓ PDFs extract cleanly regardless of format</div>
-        <div>✓ Match/Partial/Conflict reliable for underwriters</div>
-        <div>✓ Output immediately actionable — no reformatting</div>
-        <div>✓ Runs in Newfi's environment, staff operate independently</div>
-        <div style="color:#3ecf8e; font-weight:600;">✓ New lender PDF in → comparison out. No Larper.ai involvement.
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div
-    style="margin-top:40px; font-size:10px; color:#2e3040; text-align:center; padding-top:16px; border-top:1px solid #1a1c22;">
-    Generated from larper-brain wiki · 2026-04-10
-  </div>
-
+      mobileNav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          mobileNav.classList.remove('active');
+          document.body.classList.remove('modal-open');
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>
