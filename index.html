@@ -117,6 +117,64 @@
       pointer-events: none;
     }
 
+    /* ===== CORNER FRAMES ===== */
+    .corner-frame {
+      position: fixed;
+      width: 60px;
+      height: 60px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .corner-tl { top: 16px; left: 16px; }
+    .corner-tr { top: 16px; right: 16px; }
+    .corner-bl { bottom: 16px; left: 16px; }
+    .corner-br { bottom: 16px; right: 16px; }
+
+    .corner-frame line {
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+      animation: drawCorner 1.5s ease-out forwards;
+    }
+    .corner-tr line { animation-delay: 0.15s; }
+    .corner-bl line { animation-delay: 0.3s; }
+    .corner-br line { animation-delay: 0.45s; }
+
+    @keyframes drawCorner {
+      to { stroke-dashoffset: 0; }
+    }
+
+    .corner-line {
+      position: fixed;
+      left: 76px;
+      right: 76px;
+      height: 0.5px;
+      background: linear-gradient(90deg, transparent, rgba(167,139,250,0.15), rgba(34,211,238,0.15), transparent);
+      z-index: 2;
+      pointer-events: none;
+      transform: scaleX(0);
+      animation: extendLine 1s ease-out 0.8s forwards;
+    }
+    .corner-line-top { top: 16px; }
+    .corner-line-bottom { bottom: 16px; }
+
+    @keyframes extendLine {
+      to { transform: scaleX(1); }
+    }
+
+    @media (max-width: 768px) {
+      .corner-frame {
+        width: 40px;
+        height: 40px;
+      }
+      .corner-frame line { stroke-width: 0.5; stroke-dasharray: 40; stroke-dashoffset: 40; }
+      .corner-tl { top: 10px; left: 10px; }
+      .corner-tr { top: 10px; right: 10px; }
+      .corner-bl { bottom: 10px; left: 10px; }
+      .corner-br { bottom: 10px; right: 10px; }
+      .corner-line { display: none; }
+      .corner-line-top, .corner-line-bottom { display: none; }
+    }
+
     /* Scroll Progress */
     .scroll-progress {
       position: fixed;
@@ -1652,6 +1710,25 @@
     <div class="grid-pattern"></div>
     <div class="noise"></div>
     <canvas id="particle-canvas"></canvas>
+    <!-- Geometric corner frames -->
+    <svg class="corner-frame corner-tl" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="1" x2="60" y2="1" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+      <line x1="1" y1="0" x2="1" y2="60" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+    </svg>
+    <svg class="corner-frame corner-tr" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="1" x2="60" y2="1" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+      <line x1="59" y1="0" x2="59" y2="60" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+    </svg>
+    <svg class="corner-frame corner-bl" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="1" y1="60" x2="1" y2="0" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+      <line x1="0" y1="59" x2="60" y2="59" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+    </svg>
+    <svg class="corner-frame corner-br" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="59" y1="60" x2="59" y2="0" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+      <line x1="60" y1="59" x2="0" y2="59" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+    </svg>
+    <div class="corner-line corner-line-top"></div>
+    <div class="corner-line corner-line-bottom"></div>
   </div>
 
   <!-- Header -->
