@@ -1062,6 +1062,45 @@
       font-weight: 500;
     }
 
+    /* ===== ENHANCED HOVER INTERACTIONS ===== */
+
+    /* Feature card glow pulse on hover */
+    .feature-card:hover {
+      transform: translateY(-4px) scale(1.02);
+    }
+    .feature-card:hover .feature-glow {
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    /* Nav link underline slide from left */
+    .nav-links a span::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
+      transition: width 0.3s var(--transition-smooth);
+    }
+    .nav-links a span:hover::after {
+      width: 100%;
+    }
+
+    /* Social icon pulse on hover */
+    .footer-social a:hover {
+      animation: iconPulse 0.4s ease;
+    }
+    @keyframes iconPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
     /* ===== STEPS ===== */
     .steps-section {
       background: linear-gradient(180deg, transparent, rgba(96, 165, 250, 0.02), transparent);
