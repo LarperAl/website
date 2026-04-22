@@ -94,6 +94,59 @@
         inset: 0;
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         opacity: 0.035;
+        pointer-events: none;
+      }
+
+      /* Particle Canvas */
+      #particle-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* ===== CORNER FRAMES ===== */
+      .corner-frame {
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        z-index: 2;
+        pointer-events: none;
+      }
+      .corner-tl { top: 16px; left: 16px; }
+      .corner-tr { top: 16px; right: 16px; }
+      .corner-bl { bottom: 16px; left: 16px; }
+      .corner-br { bottom: 16px; right: 16px; }
+
+      .corner-frame line {
+        stroke-dasharray: 60;
+        stroke-dashoffset: 60;
+        animation: drawCorner 1.5s ease-out forwards;
+      }
+      .corner-tr line { animation-delay: 0.15s; }
+      .corner-bl line { animation-delay: 0.3s; }
+      .corner-br line { animation-delay: 0.45s; }
+
+      @keyframes drawCorner {
+        to { stroke-dashoffset: 0; }
+      }
+
+      .corner-line {
+        position: fixed;
+        left: 76px;
+        right: 76px;
+        height: 0.5px;
+        background: linear-gradient(90deg, transparent, rgba(167,139,250,0.15), rgba(34,211,238,0.15), transparent);
+        z-index: 2;
+        pointer-events: none;
+        transform: scaleX(0);
+        animation: extendLine 1s ease-out 0.8s forwards;
+      }
+      .corner-line-top { top: 16px; }
+      .corner-line-bottom { bottom: 16px; }
+
+      @keyframes extendLine {
+        to { transform: scaleX(1); }
       }
 
       /* ===== SCROLL PROGRESS ===== */
@@ -102,10 +155,23 @@
         top: 0;
         left: 0;
         height: 3px;
-        background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
+        background: linear-gradient(90deg, var(--accent), var(--accent-cyan), var(--accent-green), var(--accent));
+        background-size: 300% 100%;
         z-index: 10001;
         transform-origin: left;
         transform: scaleX(0);
+        animation: gradientShift 8s linear infinite;
+        box-shadow: 0 0 12px var(--accent), 0 0 24px rgba(167, 139, 250, 0.3);
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+
+        100% {
+          background-position: 300% 50%;
+        }
       }
 
       /* ===== HEADER ===== */
@@ -530,6 +596,45 @@
         color: var(--text);
       }
 
+      /* ===== ENHANCED HOVER INTERACTIONS ===== */
+
+      /* Feature card glow pulse on hover */
+      .feature-card:hover {
+        transform: translateY(-4px) scale(1.02);
+      }
+      .feature-card:hover .feature-glow {
+        animation: glowPulse 3s ease-in-out infinite;
+      }
+      @keyframes glowPulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+      }
+
+      /* Nav link underline slide from left */
+      .nav-links a span::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
+        transition: width 0.3s var(--transition-smooth);
+      }
+      .nav-links a span:hover::after {
+        width: 100%;
+      }
+
+      /* Social icon pulse on hover */
+      .footer-social a:hover {
+        animation: iconPulse 0.4s ease;
+      }
+      @keyframes iconPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+      }
+
       /* ===== VALUES ===== */
       .values-section {
         padding: 4rem 0;
@@ -716,6 +821,56 @@
         color: var(--text);
       }
 
+      /* ===== ENTRANCE ANIMATIONS ===== */
+
+      /* Hide header initially, reveal via JS */
+      .site-header {
+        opacity: 0 !important;
+        animation: none !important;
+      }
+
+      .site-header.entrance-active {
+        opacity: 1 !important;
+        animation: entranceFadeDown 0.7s var(--transition-smooth) forwards !important;
+      }
+
+      /* Section label slide from left */
+      .label-entrance {
+        opacity: 0;
+        transform: translateX(-30px);
+        transition: opacity 0.7s var(--transition-smooth), transform 0.7s var(--transition-smooth);
+      }
+      .label-entrance.label-active {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      /* Headline fade up */
+      .headline-entrance {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.7s var(--transition-smooth), transform 0.7s var(--transition-smooth);
+      }
+      .headline-entrance.headline-active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @keyframes entranceFadeUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes entranceFadeDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Mobile: faster timing */
+      @media (max-width: 768px) {
+        .label-entrance { transition-duration: 0.5s; }
+        .headline-entrance { transition-duration: 0.5s; }
+      }
+
       /* ===== REVEAL ===== */
       .reveal {
         opacity: 0;
@@ -849,6 +1004,18 @@
           justify-content: center;
         }
 
+        .corner-frame {
+          width: 40px;
+          height: 40px;
+        }
+        .corner-frame line { stroke-width: 0.5; stroke-dasharray: 40; stroke-dashoffset: 40; }
+        .corner-tl { top: 10px; left: 10px; }
+        .corner-tr { top: 10px; right: 10px; }
+        .corner-bl { bottom: 10px; left: 10px; }
+        .corner-br { bottom: 10px; right: 10px; }
+        .corner-line { display: none; }
+        .corner-line-top, .corner-line-bottom { display: none; }
+
         .cursor,
         .cursor-dot {
           display: none;
@@ -869,6 +1036,26 @@
       <div class="mesh-gradient"></div>
       <div class="grid-pattern"></div>
       <div class="noise"></div>
+      <canvas id="particle-canvas"></canvas>
+      <!-- Geometric corner frames -->
+      <svg class="corner-frame corner-tl" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="1" x2="60" y2="1" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+        <line x1="1" y1="0" x2="1" y2="60" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+      </svg>
+      <svg class="corner-frame corner-tr" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="1" x2="60" y2="1" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+        <line x1="59" y1="0" x2="59" y2="60" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+      </svg>
+      <svg class="corner-frame corner-bl" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="1" y1="60" x2="1" y2="0" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+        <line x1="0" y1="59" x2="60" y2="59" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+      </svg>
+      <svg class="corner-frame corner-br" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="59" y1="60" x2="59" y2="0" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+        <line x1="60" y1="59" x2="0" y2="59" stroke="rgba(34,211,238,0.4)" stroke-width="1"/>
+      </svg>
+      <div class="corner-line corner-line-top"></div>
+      <div class="corner-line corner-line-bottom"></div>
     </div>
 
     <!-- Header -->
@@ -1151,5 +1338,10 @@
         <a href="about.html">About</a>
       </div>
     </div>
+
+    <script src="js/particles.js"></script>
+    <script src="js/entrance.js"></script>
+    <script src="js/magnetic.js"></script>
+    <script src="js/countup.js"></script>
   </body>
 </html>
