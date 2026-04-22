@@ -1338,6 +1338,91 @@
       color: var(--text);
     }
 
+    /* ===== ENTRANCE ANIMATIONS ===== */
+
+    /* Hide elements initially, reveal via JS */
+    .site-header,
+    .hero-badge,
+    .hero h1,
+    .hero-tagline,
+    .hero-description,
+    .hero-buttons {
+      opacity: 0 !important;
+      animation: none !important;
+    }
+
+    .site-header.entrance-active {
+      opacity: 1 !important;
+      animation: entranceFadeDown 0.7s var(--transition-smooth) forwards !important;
+    }
+    .hero-badge.entrance-active {
+      opacity: 1 !important;
+      animation: entranceFadeUp 0.7s var(--transition-smooth) forwards !important;
+    }
+    .hero h1.entrance-active {
+      opacity: 1 !important;
+      animation: none !important;
+    }
+    .hero-tagline.entrance-active,
+    .hero-description.entrance-active {
+      opacity: 1 !important;
+      animation: entranceFadeUp 0.7s var(--transition-smooth) forwards !important;
+    }
+    .hero-buttons.entrance-active {
+      opacity: 1 !important;
+      animation: entranceFadeUp 0.7s var(--transition-smooth) forwards !important;
+    }
+
+    /* Word stagger */
+    .hero h1 .word {
+      opacity: 0;
+      display: inline-block;
+      transition: opacity 0.5s var(--transition-smooth), transform 0.5s var(--transition-smooth);
+      transform: translateY(20px);
+    }
+    .hero h1 .word.word-active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Section label slide from left */
+    .label-entrance {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: opacity 0.7s var(--transition-smooth), transform 0.7s var(--transition-smooth);
+    }
+    .label-entrance.label-active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Headline fade up */
+    .headline-entrance {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s var(--transition-smooth), transform 0.7s var(--transition-smooth);
+    }
+    .headline-entrance.headline-active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes entranceFadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes entranceFadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Mobile: faster timing */
+    @media (max-width: 768px) {
+      .hero h1 .word { transition-duration: 0.4s; }
+      .label-entrance { transition-duration: 0.5s; }
+      .headline-entrance { transition-duration: 0.5s; }
+    }
+
     /* ===== REVEAL ANIMATIONS ===== */
     .reveal {
       opacity: 0;
@@ -2283,6 +2368,7 @@
   </div>
 
   <script src="js/particles.js"></script>
+  <script src="js/entrance.js"></script>
 </body>
 
 </html>
