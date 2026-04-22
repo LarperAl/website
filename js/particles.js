@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+
   var isMobile = window.innerWidth < 768;
   var PARTICLE_COUNT = isMobile ? 20 : 60;
   var CONNECTION_DISTANCE = 120;
