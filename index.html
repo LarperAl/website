@@ -507,6 +507,17 @@
       animation: gradientText 6s ease infinite;
     }
 
+    /* Hero headline shimmer sweep */
+    .hero h1 .word-active {
+      background-size: 200% 200%;
+      animation: gradientText 6s ease infinite, shimmerSweep 6s ease infinite;
+    }
+    @keyframes shimmerSweep {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     @keyframes gradientText {
 
       0%,
