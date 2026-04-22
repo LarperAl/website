@@ -109,6 +109,14 @@
       pointer-events: none;
     }
 
+    /* Particle Canvas */
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
     /* Scroll Progress */
     .scroll-progress {
       position: fixed;
@@ -1643,6 +1651,7 @@
     <div class="mesh-gradient"></div>
     <div class="grid-pattern"></div>
     <div class="noise"></div>
+    <canvas id="particle-canvas"></canvas>
   </div>
 
   <!-- Header -->
@@ -2195,6 +2204,8 @@
       <a href="about.html">About</a>
     </div>
   </div>
+
+  <script src="js/particles.js"></script>
 </body>
 
 </html>
